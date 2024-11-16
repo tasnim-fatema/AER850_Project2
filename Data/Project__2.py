@@ -36,10 +36,10 @@ train_datagen = ImageDataGenerator(
     rescale=1./255,
     shear_range=0.3,
     zoom_range=0.3,
-    rotation_range=30,
-    width_shift_range=0.2,
-    height_shift_range=0.2,
-    horizontal_flip=True
+    # rotation_range=30,
+    # width_shift_range=0.2,
+    # height_shift_range=0.2,
+    # horizontal_flip=True
 )
 
 
@@ -71,38 +71,38 @@ print("Validation generator:", validation_generator.samples, "samples")
 #STEP 2
 # Build the model
 
-#DCNN Model 1
-model = Sequential()
+# #DCNN Model 1
+# model = Sequential()
 
-# First Convolutional Block with 16 filters
-model.add(Conv2D(16, (3, 3), activation='relu', input_shape=(500, 500, 3)))
-model.add(MaxPooling2D(pool_size=(2, 2)))
+# # First Convolutional Block with 16 filters
+# model.add(Conv2D(16, (3, 3), activation='relu', input_shape=(500, 500, 3)))
+# model.add(MaxPooling2D(pool_size=(2, 2)))
 
-# Second Convolutional Block with 32 filters
-model.add(Conv2D(32, (3, 3), activation='relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
+# # Second Convolutional Block with 32 filters
+# model.add(Conv2D(32, (3, 3), activation='relu'))
+# model.add(MaxPooling2D(pool_size=(2, 2)))
 
-# Third Convolutional Block with 64 filters
-model.add(Conv2D(64, (3, 3), activation='relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
+# # Third Convolutional Block with 64 filters
+# model.add(Conv2D(64, (3, 3), activation='relu'))
+# model.add(MaxPooling2D(pool_size=(2, 2)))
 
-# Flatten the output for fully connected layers
-model.add(Flatten())
+# # Flatten the output for fully connected layers
+# model.add(Flatten())
 
-# Fully Connected Layer with 128 units and ReLU activation
-model.add(Dense(128, activation='relu'))
+# # Fully Connected Layer with 128 units and ReLU activation
+# model.add(Dense(128, activation='relu'))
 
-# Dropout to reduce overfitting
-model.add(Dropout(0.2))
+# # Dropout to reduce overfitting
+# model.add(Dropout(0.2))
 
-# Output layer with 3 units for 3 classes and softmax activation
-model.add(Dense(3, activation='softmax'))
+# # Output layer with 3 units for 3 classes and softmax activation
+# model.add(Dense(3, activation='softmax'))
 
-# Compile the model
-model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+# # Compile the model
+# model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
-# Display the model summary
-model.summary()
+# # Display the model summary
+# model.summary()
 
 #DCNN Model 2
 
@@ -118,7 +118,7 @@ model_deep = Sequential([
     MaxPooling2D((2, 2)),
     
     Flatten(),
-    Dense(256, activation='relu'),
+    Dense(128, activation='relu'),
     Dropout(0.5),
     Dense(128, activation='relu'),
     Dropout(0.5),
@@ -134,7 +134,7 @@ model_deep.summary()
 # Define the CNN model with tuned hyperparameters
 model = Sequential([
     # Convolutional Layer 1 with LeakyReLU for non-linearity
-    Conv2D(32, (3, 3), input_shape=(500, 500, 3)),
+    Conv2D(32, (3, 3), input_shape=(250, 250, 3)),
     LeakyReLU(alpha=0.1),
     MaxPooling2D((2, 2)),
 
@@ -149,7 +149,7 @@ model = Sequential([
 
     # Flatten and add Dense Layers with varied neurons and ELU activation
     Flatten(),
-    Dense(256, activation='elu'),  # More neurons in dense layer
+    Dense(128, activation='elu'),  # More neurons in dense layer
     Dropout(0.5),
     Dense(128, activation='relu'),  # ReLU for second dense layer
     Dropout(0.5),
@@ -177,7 +177,7 @@ early_stopping = EarlyStopping(monitor='val_loss', patience=4, restore_best_weig
 history = model.fit(
     train_generator,
    steps_per_epoch=train_generator.samples // batch_size,
-    epochs=15,  # Increase epochs, but use early stopping
+    epochs=10,  # Increase epochs, but use early stopping
     validation_data=validation_generator,
     validation_steps=validation_generator.samples // batch_size,
     callbacks=[early_stopping]
@@ -218,7 +218,7 @@ plt.show()
 
 
 
-
+#STEP 5 - 
 
 
 
