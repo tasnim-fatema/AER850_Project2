@@ -5,8 +5,9 @@ from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout, LeakyReLU
-from tensorflow.keras.optimizers import Adam, RMSprop
+from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.preprocessing import image
+from tensorflow.keras.callbacks import EarlyStopping
 import numpy as np
 
 
@@ -24,12 +25,23 @@ target_size = (500, 500)  # Image size for model input
 batch_size = 32           # Batch size for data generators
 
 # Data augmentation for the training data
+# train_datagen = ImageDataGenerator(
+#     rescale=1./255,        # Normalize pixel values between 0 and 1
+#     shear_range=0.2,       # Random shear transformation
+#     zoom_range=0.2,        # Random zoom
+#     horizontal_flip=True   # Random horizontal flip
+# )
+
 train_datagen = ImageDataGenerator(
-    rescale=1./255,        # Normalize pixel values between 0 and 1
-    shear_range=0.2,       # Random shear transformation
-    zoom_range=0.2,        # Random zoom
-    horizontal_flip=True   # Random horizontal flip
+    rescale=1./255,
+    shear_range=0.3,
+    zoom_range=0.3,
+    rotation_range=30,
+    width_shift_range=0.2,
+    height_shift_range=0.2,
+    horizontal_flip=True
 )
+
 
 # Only rescale for validation and test data (no augmentation)
 validation_datagen = ImageDataGenerator(rescale=1./255)
@@ -81,7 +93,7 @@ model.add(Flatten())
 model.add(Dense(128, activation='relu'))
 
 # Dropout to reduce overfitting
-model.add(Dropout(0.5))
+model.add(Dropout(0.2))
 
 # Output layer with 3 units for 3 classes and softmax activation
 model.add(Dense(3, activation='softmax'))
@@ -147,7 +159,7 @@ model = Sequential([
 ])
 
 # Compile the model with categorical crossentropy loss and Adam optimizer
-model.compile(optimizer=Adam(learning_rate=0.01),  # Adjust learning rate as needed
+model.compile(optimizer=Adam(learning_rate=0.0001),  # Adjust learning rate as needed
               loss='categorical_crossentropy',
               metrics=['accuracy'])
 
@@ -159,13 +171,24 @@ model.compile(optimizer='adam',
               loss='categorical_crossentropy',
               metrics=['accuracy'])
 
-# Train the model using the data generators
+from tensorflow.keras.callbacks import EarlyStopping
+
+early_stopping = EarlyStopping(monitor='val_loss', patience=4, restore_best_weights=True)
 history = model.fit(
-    train_generator,  # Use generator instead of in-memory data
-    steps_per_epoch=train_generator.samples // batch_size,
-    epochs=8,
-    validation_data=validation_generator,  # Use generator instead of in-memory data
-    validation_steps=validation_generator.samples // batch_size
+    train_generator,
+   steps_per_epoch=train_generator.samples // batch_size,
+    epochs=15,  # Increase epochs, but use early stopping
+    validation_data=validation_generator,
+    validation_steps=validation_generator.samples // batch_size,
+    callbacks=[early_stopping]
+
+# # Train the model using the data generators
+# history = model.fit(
+#     train_generator,  # Use generator instead of in-memory data
+#     steps_per_epoch=train_generator.samples // batch_size,
+#     epochs=8,
+#     validation_data=validation_generator,  # Use generator instead of in-memory data
+#     validation_steps=validation_generator.samples // batch_size
 )
 
 import matplotlib.pyplot as plt
@@ -226,54 +249,3 @@ plt.show()
 
 
 
-# #STEP 4
-# import matplotlib.pyplot as plt
-# from tensorflow.keras.callbacks import EarlyStopping
-
-# # Early stopping to prevent overfitting
-# early_stopping = EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
-
-# # Train the model
-# history = model.fit(
-#     train_generator,
-#     steps_per_epoch=train_generator.samples // batch_size,
-#     epochs=4,  # You can adjust the number of epochs
-#     validation_data=validation_generator,
-#     validation_steps=validation_generator.samples // batch_size,
-#     callbacks=[early_stopping]
-# )
-
-# # Plotting the training and validation accuracy and loss
-# def plot_training_history(history):
-#     # Retrieve accuracy and loss from history object
-#     acc = history.history['accuracy']
-#     val_acc = history.history['val_accuracy']
-#     loss = history.history['loss']
-#     val_loss = history.history['val_loss']
-#     epochs = range(1, len(acc) + 1)
-
-#     # Plotting accuracy
-#     plt.figure(figsize=(14, 6))
-    
-#     # Accuracy plot
-#     plt.subplot(1, 2, 1)
-#     plt.plot(epochs, acc, 'b', label='Training Accuracy')
-#     plt.plot(epochs, val_acc, 'r', label='Validation Accuracy')
-#     plt.title('Training and Validation Accuracy')
-#     plt.xlabel('Epochs')
-#     plt.ylabel('Accuracy')
-#     plt.legend()
-
-#     # Loss plot
-#     plt.subplot(1, 2, 2)
-#     plt.plot(epochs, loss, 'b', label='Training Loss')
-#     plt.plot(epochs, val_loss, 'r', label='Validation Loss')
-#     plt.title('Training and Validation Loss')
-#     plt.xlabel('Epochs')
-#     plt.ylabel('Loss')
-#     plt.legend()
-
-#     plt.show()
-
-# # Call the function to plot the accuracy and loss
-# plot_training_history(history)
