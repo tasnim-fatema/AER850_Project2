@@ -58,6 +58,8 @@ print("Validation generator:", validation_generator.samples, "samples")
 
 #STEP 2
 # Build the model
+
+#DCNN Model 1
 model = Sequential()
 
 # First Convolutional Block with 16 filters
@@ -89,6 +91,30 @@ model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accur
 
 # Display the model summary
 model.summary()
+
+#DCNN Model 2
+
+# Deeper DCNN Model
+model_deep = Sequential([
+    Conv2D(32, (3, 3), activation='relu', input_shape=(500, 500, 3)),
+    MaxPooling2D((2, 2)),
+    
+    Conv2D(64, (3, 3), activation='relu'),
+    MaxPooling2D((2, 2)),
+    
+    Conv2D(128, (3, 3), activation='relu'),
+    MaxPooling2D((2, 2)),
+    
+    Flatten(),
+    Dense(256, activation='relu'),
+    Dropout(0.5),
+    Dense(128, activation='relu'),
+    Dropout(0.5),
+    Dense(3, activation='softmax')  # 3 classes
+])
+
+model_deep.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+model_deep.summary()
 
 
 #STEP 3
@@ -137,14 +163,13 @@ model.compile(optimizer='adam',
 history = model.fit(
     train_generator,  # Use generator instead of in-memory data
     steps_per_epoch=train_generator.samples // batch_size,
-    epochs=10,
+    epochs=8,
     validation_data=validation_generator,  # Use generator instead of in-memory data
     validation_steps=validation_generator.samples // batch_size
 )
 
 import matplotlib.pyplot as plt
 
-# Ensure the history object has the 'val_accuracy' and 'val_loss' metrics
 # Plot training & validation accuracy and loss
 plt.figure(figsize=(12, 4))
 
