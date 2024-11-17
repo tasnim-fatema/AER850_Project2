@@ -1,72 +1,47 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Nov 16 23:05:45 2024
-
-@author: 16477
-"""
-
-"STEP 5: MODEL Testing"
-
-"Import Librarires"
-
+# Import necessary libraries
 import numpy as np
-from tensorflow.keras.models import load_model
-from tensorflow.keras.preprocessing.image import load_img, img_to_array
 import matplotlib.pyplot as plt
+from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing import image
 
-"Load the Model"
-Model = load_model("Project 2.keras")
+# Load the trained model
+model_path = './saved_model/my_model.h5'  # Adjust path if needed
+model = load_model(model_path)
 
-"Define Input Image Shape"
-Img_width = 500
-Img_height = 500
+# Define the test image paths
+test_images = {
+    "Crack": "./test/crack/test_crack.jpg",
+    "Missing Head": "./test/missing-head/test_missinghead.jpg",
+    "Paint Off": "./test/paint-off/test_paintoff.jpg"
+}
 
-"Define Class Labels"
-class_labels = ['Crack', 'Missing-head', 'Paint-off']
+# Function to preprocess and predict the class of an image
+def process_and_predict(image_path, model):
+    # Load the image with the target size matching the model input
+    img = image.load_img(image_path, target_size=(500, 500))
+    
+    # Convert the image to an array and normalize
+    img_array = image.img_to_array(img) / 255.0
+    img_array = np.expand_dims(img_array, axis=0)  # Add batch dimension
 
-"Data Preprocessing"
-def preprocess (image_path, target_size = (Img_width, Img_height)):
-    image = load_img (image_path, target_size = target_size)
-    image_array = img_to_array (image)
-    image_array = image_array/255
-    image_array = np.expand_dims(image_array, 0)
-    return image_array
+    # Predict the class
+    predictions = model.predict(img_array)
+    predicted_class = np.argmax(predictions, axis=1)  # Find the class with highest probability
+    confidence = np.max(predictions) * 100  # Confidence score
 
-"Data Prediction"
-def predict (image_array, model):
-    predictions = model.predict (image_array)
-    return predictions
+    return predicted_class[0], confidence, img
 
-"Data Display"
-def display (image_path, predictions, true_label, class_labels):
-    predicted_label = class_labels [np.argmax(predictions)]
-    fig, ax = plt.subplots(figsize = (6,6))
-    img = plt.imread(image_path)
-    plt.imshow(img)
-    ax.axis('off')
-    plt.title (f"True Crack Classification Label: {true_label}\n"
-               f"Predicted Crack Classification Label: {predicted_label}\n")
-    sorted_labels = sorted(zip(class_labels, predictions[0]))
-    for index, (label,percentage) in enumerate(sorted_labels):
-        ax.text(
-            10, 
-            25 + index * 30,
-            f"{label}: {percentage * 100:.2f}%",
-            bbox=dict(facecolor="blue"),
-            fontsize=10,
-            color='white',
-            )
-    plt.tight_layout()
-    plt.show ()
+# Class labels (ensure they match your training data)
+class_labels = ["Crack", "Missing Head", "Paint Off"]
 
-"Test Specfic Images"
-test_images = [
-    (r"AER850_Project 2\Data\test\crack\test_crack.jpg", "Crack"),
-    # (r"Project 2 Data\Data\test\missing-head\test_missinghead.jpg", "Missing Head"),
-    # (r"Project 2 Data\Data\test\paint-off\test_paintoff.jpg", "Paint-Off")
-    ]
+# Iterate over the test images and make predictions
+for label, img_path in test_images.items():
+    pred_class_idx, confidence, img_display = process_and_predict(img_path, model)
+    pred_label = class_labels[pred_class_idx]
 
-for image_path, true_label in test_images:
-    img_preprocess = preprocess(image_path)
-    predictions = predict(img_preprocess, Model)
-    display(image_path, predictions, true_label, class_labels)
+    # Display the image and prediction
+    plt.figure()
+    plt.imshow(img_display)
+    plt.axis('off')
+    plt.title(f"True Label: {label}\nPredicted: {pred_label} ({confidence:.2f}%)")
+    plt.show()
