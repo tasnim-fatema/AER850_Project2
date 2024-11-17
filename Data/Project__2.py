@@ -121,28 +121,57 @@ model.summary()
 # model_deep.summary()
 
 
-#STEP 3
+# #STEP 3
+
+# # Define the CNN model with tuned hyperparameters
+# model = Sequential([
+#     # Convolutional Layer 1 with LeakyReLU for non-linearity
+#     Conv2D(32, (3, 3), input_shape=(500, 500, 3)),
+#     # LeakyReLU(alpha=0.1),
+#     LeakyReLU(alpha=0.1),
+#     MaxPooling2D((2, 2)),
+
+#     # Convolutional Layer 2 with ReLU activation
+#     Conv2D(64, (3, 3), activation='relu'),
+#     MaxPooling2D((2, 2)),
+
+#     # Convolutional Layer 3 with LeakyReLU
+#     Conv2D(128, (3, 3)),
+#     LeakyReLU(alpha=0.1),
+#     MaxPooling2D((2, 2)),
+
+#     # Flatten and add Dense Layers with varied neurons and ELU activation
+#     Flatten(),
+#     Dense(128, activation='elu'),  # More neurons in dense layer
+#     Dropout(0.5),
+#     Dense(128, activation='relu'),  # ReLU for second dense layer
+#     Dropout(0.5),
+
+#     # Output layer with softmax for multi-class classification
+#     Dense(3, activation='softmax')
+#])
+
+# STEP 3
 
 # Define the CNN model with tuned hyperparameters
 model = Sequential([
-    # Convolutional Layer 1 with LeakyReLU for non-linearity
+    # Convolutional Layer 1 with ReLU for non-linearity
     Conv2D(32, (3, 3), input_shape=(500, 500, 3)),
-    # LeakyReLU(alpha=0.1),
-    LeakyReLU(alpha=0.1),
+    keras.layers.ReLU(),
     MaxPooling2D((2, 2)),
 
     # Convolutional Layer 2 with ReLU activation
     Conv2D(64, (3, 3), activation='relu'),
     MaxPooling2D((2, 2)),
 
-    # Convolutional Layer 3 with LeakyReLU
+    # Convolutional Layer 3 with ReLU
     Conv2D(128, (3, 3)),
-    LeakyReLU(alpha=0.1),
+    keras.layers.ReLU(),
     MaxPooling2D((2, 2)),
 
     # Flatten and add Dense Layers with varied neurons and ELU activation
     Flatten(),
-    Dense(128, activation='elu'),  # More neurons in dense layer
+    Dense(128, activation='elu'),  # ELU for first dense layer
     Dropout(0.5),
     Dense(128, activation='relu'),  # ReLU for second dense layer
     Dropout(0.5),
