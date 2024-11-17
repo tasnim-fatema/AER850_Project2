@@ -1,6 +1,6 @@
 import tensorflow as tf
 from tensorflow import keras
-from tensorflow.keras.datasets import mnist
+# from tensorflow.keras.datasets import mnist
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.models import Sequential
@@ -9,7 +9,6 @@ from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras.callbacks import EarlyStopping
 import numpy as np
-
 
 print(f"TensorFlow Version: {tf.__version__}")
 print(f"Keras Version: {keras.__version__}")
@@ -28,13 +27,10 @@ train_datagen = ImageDataGenerator(
     rescale=1./255,
     shear_range=0.3,
     zoom_range=0.3,
-
 )
-
 
 # Only rescale for validation and test data (no augmentation)
 validation_datagen = ImageDataGenerator(rescale=1./255)
-# test_datagen = ImageDataGenerator(rescale=1./255)
 
 # Create data generators
 train_generator = train_datagen.flow_from_directory(
@@ -64,25 +60,44 @@ model = Sequential()
 # First Convolutional Block with 16 filters
 model.add(Conv2D(16, (3, 3), activation='relu', input_shape=(500, 500, 3)))
 model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.2))
 
 # Second Convolutional Block with 32 filters
 model.add(Conv2D(32, (3, 3), activation='relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.3)) 
 
 # Third Convolutional Block with 64 filters
 model.add(Conv2D(64, (3, 3), activation='relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.3))
+
+# Fourth Convolutional Block with 128 filters
+model.add(Conv2D(128, (3, 3), activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.4))
+
+# Fifth Convolutional Block with 256 filters
+model.add(Conv2D(256, (3, 3), activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.5))    
+
+# Sixth Convolutional Block with 512 filters
+model.add(Conv2D(512, (3, 3), activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.5)) 
 
 # Flatten the output for fully connected layers
 model.add(Flatten())
 
-# Fully Connected Layer with 128 units and ReLU activation
-model.add(Dense(128, activation='relu'))
+# Fully Connected Layer
+# Dense layer with 64 units and ReLU activation
+# Dropout (0.5) to further reduce overfitting
+model.add(Dense(64, activation='relu'))
+model.add(Dropout(0.5))
 
-# Dropout to reduce overfitting
-model.add(Dropout(0.2))
-
-# Output layer with 3 units for 3 classes and softmax activation
+# Output Layer
+# Dense layer with 3 units (for 3 classes) and softmax activation
 model.add(Dense(3, activation='softmax'))
 
 # Compile the model
@@ -148,32 +163,32 @@ model.summary()
 
 # STEP 3
 
-# Define the CNN model with tuned hyperparameters
-model = Sequential([
-    # Convolutional Layer 1 with ReLU for non-linearity
-    Conv2D(32, (3, 3), input_shape=(500, 500, 3)),
-    keras.layers.ReLU(),
-    MaxPooling2D((2, 2)),
+# # Define the CNN model with tuned hyperparameters
+# model = Sequential([
+#     # Convolutional Layer 1 with ReLU for non-linearity
+#     Conv2D(32, (3, 3), input_shape=(500, 500, 3)),
+#     keras.layers.ReLU(),
+#     MaxPooling2D((2, 2)),
 
-    # Convolutional Layer 2 with ReLU activation
-    Conv2D(64, (3, 3), activation='relu'),
-    MaxPooling2D((2, 2)),
+#     # Convolutional Layer 2 with ReLU activation
+#     Conv2D(64, (3, 3), activation='relu'),
+#     MaxPooling2D((2, 2)),
 
-    # Convolutional Layer 3 with ReLU
-    Conv2D(128, (3, 3)),
-    keras.layers.ReLU(),
-    MaxPooling2D((2, 2)),
+#     # Convolutional Layer 3 with ReLU
+#     Conv2D(128, (3, 3)),
+#     keras.layers.ReLU(),
+#     MaxPooling2D((2, 2)),
 
-    # Flatten and add Dense Layers with varied neurons and ELU activation
-    Flatten(),
-    Dense(128, activation='elu'),  # ELU for first dense layer
-    Dropout(0.5),
-    Dense(128, activation='relu'),  # ReLU for second dense layer
-    Dropout(0.5),
+#     # Flatten and add Dense Layers with varied neurons and ELU activation
+#     Flatten(),
+#     Dense(128, activation='elu'),  # ELU for first dense layer
+#     Dropout(0.5),
+#     Dense(128, activation='relu'),  # ReLU for second dense layer
+#     Dropout(0.5),
 
-    # Output layer with softmax for multi-class classification
-    Dense(3, activation='softmax')
-])
+#     # Output layer with softmax for multi-class classification
+#     Dense(3, activation='softmax')
+# ])
 
 # Compile the model with categorical crossentropy loss and Adam optimizer
 model.compile(optimizer=Adam(learning_rate=0.0001),  # Adjust learning rate as needed
@@ -191,18 +206,11 @@ from tensorflow.keras.callbacks import EarlyStopping
 early_stopping = EarlyStopping(monitor='val_loss', patience=4, restore_best_weights=True)
 history = model.fit(
     train_generator,
-    epochs=15,  
+    epochs=25,  
     validation_data=validation_generator,
     # validation_steps=validation_generator,
     callbacks=[early_stopping]
 
-# # Train the model using the data generators
-# history = model.fit(
-#     train_generator,  # Use generator instead of in-memory data
-#     steps_per_epoch=train_generator.samples // batch_size,
-#     epochs=8,
-#     validation_data=validation_generator,  # Use generator instead of in-memory data
-#     validation_steps=validation_generator.samples // batch_size
 )
 
 import matplotlib.pyplot as plt
