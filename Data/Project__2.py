@@ -71,12 +71,13 @@ model.add(Dropout(0.2))
 # Third Convolutional Block with 64 filters
 model.add(Conv2D(64, (3, 3), activation='relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.3))
+model.add(Dropout(0.2))
 
 # Fourth Convolutional Block with 128 filters
-model.add(Conv2D(128, (3, 3), activation='relu'))
+model.add(Conv2D(128, (3, 3)))
+model.add(LeakyReLU(alpha=0.1))  # Replace ReLU with Leaky ReLU
 model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.4))
+model.add(Dropout(0.3))
 
 # Fifth Convolutional Block with 256 filters
 model.add(Conv2D(256, (3, 3), activation='relu'))
@@ -103,62 +104,10 @@ model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accur
 # Display the model summary
 model.summary()
 
-#DCNN Model 2
 
-# # Deeper DCNN Model
-# model_deep = Sequential([
-#     Conv2D(32, (3, 3), activation='relu', input_shape=(500, 500, 3)),
-#     MaxPooling2D((2, 2)),
-    
-#     Conv2D(64, (3, 3), activation='relu'),
-#     MaxPooling2D((2, 2)),
-    
-#     Conv2D(128, (3, 3), activation='relu'),
-#     MaxPooling2D((2, 2)),
-    
-#     Flatten(),
-#     Dense(128, activation='relu'),
-#     Dropout(0.5),
-#     Dense(128, activation='relu'),
-#     Dropout(0.5),
-#     Dense(3, activation='softmax')  # 3 classes
-# ])
-
-# model_deep.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-# model_deep.summary()
-
-
-# STEP 3
-
-# # Define the CNN model with tuned hyperparameters
-# model = Sequential([
-#     # Convolutional Layer 1 with ReLU for non-linearity
-#     Conv2D(32, (3, 3), input_shape=(500, 500, 3)),
-#     keras.layers.ReLU(),
-#     MaxPooling2D((2, 2)),
-
-#     # Convolutional Layer 2 with ReLU activation
-#     Conv2D(64, (3, 3), activation='relu'),
-#     MaxPooling2D((2, 2)),
-
-#     # Convolutional Layer 3 with ReLU
-#     Conv2D(128, (3, 3)),
-#     keras.layers.ReLU(),
-#     MaxPooling2D((2, 2)),
-
-#     # Flatten and add Dense Layers with varied neurons and ELU activation
-#     Flatten(),
-#     Dense(128, activation='elu'),  # ELU for first dense layer
-#     Dropout(0.5),
-#     Dense(128, activation='relu'),  # ReLU for second dense layer
-#     Dropout(0.5),
-
-#     # Output layer with softmax for multi-class classification
-#     Dense(3, activation='softmax')
-# ])
 
 # Compile the model with categorical crossentropy loss and Adam optimizer
-model.compile(optimizer=Adam(learning_rate=0.0001),  # Adjust learning rate as needed
+model.compile(optimizer=Adam(learning_rate=0.001),  # Adjust learning rate as needed
               loss='categorical_crossentropy',
               metrics=['accuracy'])
 
@@ -168,12 +117,11 @@ model.compile(optimizer='adam',
               loss='categorical_crossentropy',
               metrics=['accuracy'])
 
-from tensorflow.keras.callbacks import EarlyStopping
 
 early_stopping = EarlyStopping(monitor='val_loss', patience=4, restore_best_weights=True)
 history = model.fit(
     train_generator,
-    epochs=35,  
+    epochs=30,  
     validation_data=validation_generator,
     callbacks=[early_stopping]
 

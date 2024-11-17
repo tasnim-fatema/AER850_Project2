@@ -66,9 +66,15 @@ for img_path, label in test_images:
     pred_class_idx, confidence, img_display = process_and_predict(img_path, Model)
     pred_label = class_labels[pred_class_idx]
 
-    # Display the image and prediction
-    plt.figure()
-    plt.imshow(img_display)
+    # # Display the image and prediction
+    # plt.figure()
+    # plt.imshow(img_display)
+    # plt.axis('off')
+    # plt.title(f"True Label: {label}\nPredicted: {pred_label} ({confidence:.2f}%)")
+    # plt.show()
+    
+def plot_prediction(image, true_label, predicted_label, confidence):
+    plt.imshow(image, cmap='gray')
     plt.axis('off')
-    plt.title(f"True Label: {label}\nPredicted: {pred_label} ({confidence:.2f}%)")
+    plt.title(f"True Label: {true_label}\nPredicted: {predicted_label} ({confidence:.2f}%)")
     plt.show()
