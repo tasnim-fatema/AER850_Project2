@@ -28,10 +28,7 @@ train_datagen = ImageDataGenerator(
     rescale=1./255,
     shear_range=0.3,
     zoom_range=0.3,
-    # rotation_range=30,
-    # width_shift_range=0.2,
-    # height_shift_range=0.2,
-    # horizontal_flip=True
+
 )
 
 
@@ -196,7 +193,7 @@ from tensorflow.keras.callbacks import EarlyStopping
 early_stopping = EarlyStopping(monitor='val_loss', patience=4, restore_best_weights=True)
 history = model.fit(
     train_generator,
-    epochs=10,  
+    epochs=15,  
     validation_data=validation_generator,
     # validation_steps=validation_generator,
     callbacks=[early_stopping]
