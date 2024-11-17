@@ -20,8 +20,8 @@ train_dir = './train'
 validation_dir = './valid'
 
 # Define the input image size and batch size
-target_size = (500, 500)  # Image size for model input
-batch_size = 32           # Batch size for data generators
+target_size = (500, 500)  
+batch_size = 32           
 
 # Data augmentation for the training data
 train_datagen = ImageDataGenerator(
@@ -54,8 +54,6 @@ validation_generator = validation_datagen.flow_from_directory(
 # Print summary of data generator
 print("Train generator:", train_generator.samples, "samples")
 print("Validation generator:", validation_generator.samples, "samples")
-# print("Test generator:", test_generator.samples, "samples")
-
 
 #STEP 2
 # Build the model
@@ -214,8 +212,8 @@ plt.figure(figsize=(12, 4))
 
 # Plot training & validation accuracy
 plt.subplot(1, 2, 1)
-plt.plot(history.history['accuracy'], label='Training Accuracy')
-plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
+plt.plot(history.history['accuracy'], label='Training Accuracy', color='blue')
+plt.plot(history.history['val_accuracy'], label='Validation Accuracy', color='red')
 plt.title('Model Accuracy')
 plt.xlabel('Epoch')
 plt.ylabel('Accuracy')
@@ -223,8 +221,8 @@ plt.legend()
 
 # Plot training & validation loss
 plt.subplot(1, 2, 2)
-plt.plot(history.history['loss'], label='Training Loss')
-plt.plot(history.history['val_loss'], label='Validation Loss')
+plt.plot(history.history['loss'], label='Training Loss', color ='blue')
+plt.plot(history.history['val_loss'], label='Validation Loss', color='red')
 plt.title('Model Loss')
 plt.xlabel('Epoch')
 plt.ylabel('Loss')
@@ -232,7 +230,7 @@ plt.legend()
 
 plt.show()
 
-#STEP 5 - 
+mode.save("Project 2.keras")
 
 
 
