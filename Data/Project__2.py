@@ -19,19 +19,11 @@ print(f"Keras Version: {keras.__version__}")
 train_dir = './train'
 validation_dir = './valid'
 
-
 # Define the input image size and batch size
 target_size = (500, 500)  # Image size for model input
 batch_size = 32           # Batch size for data generators
 
 # Data augmentation for the training data
-# train_datagen = ImageDataGenerator(
-#     rescale=1./255,        # Normalize pixel values between 0 and 1
-#     shear_range=0.2,       # Random shear transformation
-#     zoom_range=0.2,        # Random zoom
-#     horizontal_flip=True   # Random horizontal flip
-# )
-
 train_datagen = ImageDataGenerator(
     rescale=1./255,
     shear_range=0.3,
@@ -71,62 +63,62 @@ print("Validation generator:", validation_generator.samples, "samples")
 #STEP 2
 # Build the model
 
-# #DCNN Model 1
-# model = Sequential()
+#DCNN Model 1
+model = Sequential()
 
-# # First Convolutional Block with 16 filters
-# model.add(Conv2D(16, (3, 3), activation='relu', input_shape=(500, 500, 3)))
-# model.add(MaxPooling2D(pool_size=(2, 2)))
+# First Convolutional Block with 16 filters
+model.add(Conv2D(16, (3, 3), activation='relu', input_shape=(500, 500, 3)))
+model.add(MaxPooling2D(pool_size=(2, 2)))
 
-# # Second Convolutional Block with 32 filters
-# model.add(Conv2D(32, (3, 3), activation='relu'))
-# model.add(MaxPooling2D(pool_size=(2, 2)))
+# Second Convolutional Block with 32 filters
+model.add(Conv2D(32, (3, 3), activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
 
-# # Third Convolutional Block with 64 filters
-# model.add(Conv2D(64, (3, 3), activation='relu'))
-# model.add(MaxPooling2D(pool_size=(2, 2)))
+# Third Convolutional Block with 64 filters
+model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
 
-# # Flatten the output for fully connected layers
-# model.add(Flatten())
+# Flatten the output for fully connected layers
+model.add(Flatten())
 
-# # Fully Connected Layer with 128 units and ReLU activation
-# model.add(Dense(128, activation='relu'))
+# Fully Connected Layer with 128 units and ReLU activation
+model.add(Dense(128, activation='relu'))
 
-# # Dropout to reduce overfitting
-# model.add(Dropout(0.2))
+# Dropout to reduce overfitting
+model.add(Dropout(0.2))
 
-# # Output layer with 3 units for 3 classes and softmax activation
-# model.add(Dense(3, activation='softmax'))
+# Output layer with 3 units for 3 classes and softmax activation
+model.add(Dense(3, activation='softmax'))
 
-# # Compile the model
-# model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+# Compile the model
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
-# # Display the model summary
-# model.summary()
+# Display the model summary
+model.summary()
 
 #DCNN Model 2
 
-# Deeper DCNN Model
-model_deep = Sequential([
-    Conv2D(32, (3, 3), activation='relu', input_shape=(500, 500, 3)),
-    MaxPooling2D((2, 2)),
+# # Deeper DCNN Model
+# model_deep = Sequential([
+#     Conv2D(32, (3, 3), activation='relu', input_shape=(500, 500, 3)),
+#     MaxPooling2D((2, 2)),
     
-    Conv2D(64, (3, 3), activation='relu'),
-    MaxPooling2D((2, 2)),
+#     Conv2D(64, (3, 3), activation='relu'),
+#     MaxPooling2D((2, 2)),
     
-    Conv2D(128, (3, 3), activation='relu'),
-    MaxPooling2D((2, 2)),
+#     Conv2D(128, (3, 3), activation='relu'),
+#     MaxPooling2D((2, 2)),
     
-    Flatten(),
-    Dense(128, activation='relu'),
-    Dropout(0.5),
-    Dense(128, activation='relu'),
-    Dropout(0.5),
-    Dense(3, activation='softmax')  # 3 classes
-])
+#     Flatten(),
+#     Dense(128, activation='relu'),
+#     Dropout(0.5),
+#     Dense(128, activation='relu'),
+#     Dropout(0.5),
+#     Dense(3, activation='softmax')  # 3 classes
+# ])
 
-model_deep.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-model_deep.summary()
+# model_deep.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+# model_deep.summary()
 
 
 #STEP 3
@@ -134,7 +126,8 @@ model_deep.summary()
 # Define the CNN model with tuned hyperparameters
 model = Sequential([
     # Convolutional Layer 1 with LeakyReLU for non-linearity
-    Conv2D(32, (3, 3), input_shape=(250, 250, 3)),
+    Conv2D(32, (3, 3), input_shape=(500, 500, 3)),
+    # LeakyReLU(alpha=0.1),
     LeakyReLU(alpha=0.1),
     MaxPooling2D((2, 2)),
 
@@ -165,8 +158,6 @@ model.compile(optimizer=Adam(learning_rate=0.0001),  # Adjust learning rate as n
 
 # Display model summary
 model.summary()
-
-
 model.compile(optimizer='adam',
               loss='categorical_crossentropy',
               metrics=['accuracy'])
@@ -176,10 +167,9 @@ from tensorflow.keras.callbacks import EarlyStopping
 early_stopping = EarlyStopping(monitor='val_loss', patience=4, restore_best_weights=True)
 history = model.fit(
     train_generator,
-   steps_per_epoch=train_generator.samples // batch_size,
-    epochs=10,  # Increase epochs, but use early stopping
+    epochs=10,  
     validation_data=validation_generator,
-    validation_steps=validation_generator.samples // batch_size,
+    # validation_steps=validation_generator,
     callbacks=[early_stopping]
 
 # # Train the model using the data generators
@@ -215,8 +205,6 @@ plt.ylabel('Loss')
 plt.legend()
 
 plt.show()
-
-
 
 #STEP 5 - 
 
