@@ -9,6 +9,7 @@ from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras.callbacks import EarlyStopping
 import numpy as np
+import matplotlib.pyplot as plt
 
 print(f"TensorFlow Version: {tf.__version__}")
 print(f"Keras Version: {keras.__version__}")
@@ -65,7 +66,7 @@ model.add(Dropout(0.2))
 # Second Convolutional Block with 32 filters
 model.add(Conv2D(32, (3, 3), activation='relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.3)) 
+model.add(Dropout(0.2)) 
 
 # Third Convolutional Block with 64 filters
 model.add(Conv2D(64, (3, 3), activation='relu'))
@@ -82,10 +83,6 @@ model.add(Conv2D(256, (3, 3), activation='relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.5))    
 
-# Sixth Convolutional Block with 512 filters
-model.add(Conv2D(512, (3, 3), activation='relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.5)) 
 
 # Flatten the output for fully connected layers
 model.add(Flatten())
@@ -130,36 +127,6 @@ model.summary()
 # model_deep.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 # model_deep.summary()
 
-
-# #STEP 3
-
-# # Define the CNN model with tuned hyperparameters
-# model = Sequential([
-#     # Convolutional Layer 1 with LeakyReLU for non-linearity
-#     Conv2D(32, (3, 3), input_shape=(500, 500, 3)),
-#     # LeakyReLU(alpha=0.1),
-#     LeakyReLU(alpha=0.1),
-#     MaxPooling2D((2, 2)),
-
-#     # Convolutional Layer 2 with ReLU activation
-#     Conv2D(64, (3, 3), activation='relu'),
-#     MaxPooling2D((2, 2)),
-
-#     # Convolutional Layer 3 with LeakyReLU
-#     Conv2D(128, (3, 3)),
-#     LeakyReLU(alpha=0.1),
-#     MaxPooling2D((2, 2)),
-
-#     # Flatten and add Dense Layers with varied neurons and ELU activation
-#     Flatten(),
-#     Dense(128, activation='elu'),  # More neurons in dense layer
-#     Dropout(0.5),
-#     Dense(128, activation='relu'),  # ReLU for second dense layer
-#     Dropout(0.5),
-
-#     # Output layer with softmax for multi-class classification
-#     Dense(3, activation='softmax')
-#])
 
 # STEP 3
 
@@ -206,14 +173,11 @@ from tensorflow.keras.callbacks import EarlyStopping
 early_stopping = EarlyStopping(monitor='val_loss', patience=4, restore_best_weights=True)
 history = model.fit(
     train_generator,
-    epochs=25,  
+    epochs=35,  
     validation_data=validation_generator,
-    # validation_steps=validation_generator,
     callbacks=[early_stopping]
 
 )
-
-import matplotlib.pyplot as plt
 
 # Plot training & validation accuracy and loss
 plt.figure(figsize=(12, 4))
@@ -238,7 +202,8 @@ plt.legend()
 
 plt.show()
 
-mode.save("Project 2.keras")
+model.save("Project 2.keras")
+print("Model saved successfully.")
 
 
 
