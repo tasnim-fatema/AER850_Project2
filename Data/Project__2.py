@@ -61,23 +61,22 @@ model = Sequential()
 # First Convolutional Block with 16 filters
 model.add(Conv2D(16, (3, 3), activation='relu', input_shape=(500, 500, 3)))
 model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.2))
 
 # Second Convolutional Block with 32 filters
 model.add(Conv2D(32, (3, 3), activation='relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.2)) 
 
 # Third Convolutional Block with 64 filters
 model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(LeakyReLU(alpha=0.1))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.2))
 
 # Fourth Convolutional Block with 128 filters
-model.add(Conv2D(128, (3, 3)))
-model.add(LeakyReLU(alpha=0.1))  # Replace ReLU with Leaky ReLU
+model.add(Conv2D(128, (3, 3), activation='relu'))
+# model.add(LeakyReLU(alpha=0.1))  # Replace ReLU with Leaky ReLU
 model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.3))
+model.add(Dropout(0.4))
 
 # Fifth Convolutional Block with 256 filters
 model.add(Conv2D(256, (3, 3), activation='relu'))
@@ -104,8 +103,6 @@ model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accur
 # Display the model summary
 model.summary()
 
-
-
 # Compile the model with categorical crossentropy loss and Adam optimizer
 model.compile(optimizer=Adam(learning_rate=0.001),  # Adjust learning rate as needed
               loss='categorical_crossentropy',
@@ -118,13 +115,12 @@ model.compile(optimizer='adam',
               metrics=['accuracy'])
 
 
-early_stopping = EarlyStopping(monitor='val_loss', patience=4, restore_best_weights=True)
+# early_stopping = EarlyStopping(monitor='val_loss', patience=4, restore_best_weights=True)
 history = model.fit(
     train_generator,
-    epochs=30,  
+    epochs=50,  
     validation_data=validation_generator,
-    callbacks=[early_stopping]
-
+    # callbacks=[early_stopping]
 )
 
 # Plot training & validation accuracy and loss
@@ -152,6 +148,7 @@ plt.show()
 
 model.save("Project 2.keras")
 print("Model saved successfully.")
+
 
 
 
