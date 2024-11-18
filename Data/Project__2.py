@@ -119,7 +119,7 @@ history = model.fit(
     train_generator,
     epochs=50,  
     validation_data=validation_generator,
-    # callbacks=[early_stopping]
+
 )
 
 # Plot training & validation accuracy and loss
