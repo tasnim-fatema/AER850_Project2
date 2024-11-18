@@ -126,7 +126,7 @@ model.compile(optimizer='adam',
 # early_stopping = EarlyStopping(monitor='val_loss', patience=4, restore_best_weights=True)
 history = model.fit(
     train_generator,
-    epochs=2,  
+    epochs=50,  
     validation_data=validation_generator,
 
 )
