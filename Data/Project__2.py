@@ -91,10 +91,6 @@ model = Sequential([
 # Summary of the model for hyperparameter insights
 model.summary()
 
-
-# Flatten the output for fully connected layers
-model.add(Flatten())
-
 # Fully Connected Layer
 # Dense layer with 64 units and ReLU activation
 # Dropout (0.5) to further reduce overfitting
