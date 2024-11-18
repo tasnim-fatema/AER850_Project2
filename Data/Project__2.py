@@ -99,10 +99,6 @@ model = Sequential([
 # Dense layer with 3 units (for 3 classes) and softmax activation
 model.add(Dense(3, activation='softmax'))
 
-# Compile the model
-model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-
-
 
 # Compile the model with categorical crossentropy loss and Adam optimizer
 model.compile(optimizer=Adam(learning_rate=0.001),  # Adjust learning rate as needed
