@@ -118,9 +118,9 @@ model.compile(optimizer=Adam(learning_rate=0.001),  # Adjust learning rate as ne
 
 # Display model summary
 model.summary()
-model.compile(optimizer='adam',
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
+# model.compile(optimizer='adam',
+#               loss='categorical_crossentropy',
+#               metrics=['accuracy'])
 
 #STEP 4- Model Evaluation
 # early_stopping = EarlyStopping(monitor='val_loss', patience=4, restore_best_weights=True)
