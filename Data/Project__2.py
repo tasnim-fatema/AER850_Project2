@@ -87,9 +87,7 @@ model = Sequential([
     Dropout(0.5)
 ])
 
-# Hyperparameter Analysis
-# Summary of the model for hyperparameter insights
-model.summary()
+
 
 # Fully Connected Layer
 # Dense layer with 64 units and ReLU activation
@@ -104,8 +102,7 @@ model.add(Dense(3, activation='softmax'))
 # Compile the model
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
-# # Display the model summary
-# model.summary()
+
 
 # Compile the model with categorical crossentropy loss and Adam optimizer
 model.compile(optimizer=Adam(learning_rate=0.001),  # Adjust learning rate as needed
@@ -114,9 +111,7 @@ model.compile(optimizer=Adam(learning_rate=0.001),  # Adjust learning rate as ne
 
 # Display model summary
 model.summary()
-# model.compile(optimizer='adam',
-#               loss='categorical_crossentropy',
-#               metrics=['accuracy'])
+
 
 #STEP 4- Model Evaluation
 # early_stopping = EarlyStopping(monitor='val_loss', patience=4, restore_best_weights=True)
