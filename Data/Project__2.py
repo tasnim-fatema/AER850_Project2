@@ -89,11 +89,11 @@ model = Sequential([
 
 
 
-# Fully Connected Layer
-# Dense layer with 64 units and ReLU activation
-# Dropout (0.5) to further reduce overfitting
-model.add(Dense(64, activation='relu'))
-model.add(Dropout(0.5))
+# # Fully Connected Layer
+# # Dense layer with 64 units and ReLU activation
+# # Dropout (0.5) to further reduce overfitting
+# model.add(Dense(64, activation='relu'))
+# model.add(Dropout(0.5))
 
 # Output Layer
 # Dense layer with 3 units (for 3 classes) and softmax activation
